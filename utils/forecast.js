@@ -1,29 +1,32 @@
 const axios = require("axios");
 
-const forecast = async (long, lat, callback) => {
-    const url =
-      "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
-      long +
-      "," +
-      lat +
-      ".json?access_token=pk.eyJ1IjoiYXJ4bGFuNDAiLCJhIjoiY2twZGg1eGY3MWhjYjJxcW1nc3dyanczaiJ9.xzxmx4bWLT_swUJes1UiGA";
-  
-    try {
-      const response = await axios.get(url);
-      // console.log(response.data.features.length);
-  
-      if (response.data.features.length === 0) {
-        callback("Unable to find location. Try another search", undefined);
-      } else {
-        callback(undefined, {
-          long: response.data.features[0].center[0],
-          lat: response.data.features[0].center[1],
-          location: response.data.features[0].place_name,
-        });
-      }
-    } catch (error) {
-      callback("Unable to connect", undefined);
-    }
-  };
+const forecast = async (lat, long, callback) => {
+  const url =
+    "http://api.weatherapi.com/v1/current.json?key=098db240bfab4b7b8c544654212006&q=" +
+    lat +
+    "," +
+    long +
+    "&aqi=no";
 
-  module.exports = forecast;
+  try {
+    const response = await axios.get(url);
+
+    if (response.error) {
+      await callback("Unable to find weather. Try another search", undefined);
+    } else {
+      await callback(
+        undefined,
+        " It is currently " +
+          response.data.current.temp_c +
+          " degress out. There is a " +
+          response.data.current.precip_mm +
+          "% chance of rain."
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    callback("Unable to connect", undefined);
+  }
+};
+
+module.exports = forecast;

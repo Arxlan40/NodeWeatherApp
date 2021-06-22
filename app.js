@@ -1,13 +1,24 @@
 const geocode = require("./utils/geocode");
 const forecast = require("./utils/forecast");
 
-geocode("Pakistan", (error, data) => {
-  console.log(data);
+const address = process.argv[2];
 
-  console.log(error);
-});
+if (!address) {
+  console.log("Please Provide Address");
+} else {
+  geocode(address, (error, geocodeData) => {
+    if (error) {
+      console.log(error);
+    }
 
-forecast(-75.7088, 44.1545, (error, data) => {
-  console.log("Error", error);
-  console.log("Data", data);
-});
+    forecast(geocodeData.lat, geocodeData.long, (error, forecastData) => {
+      if (error) {
+        console.log(error);
+      }
+      console.log(geocodeData.location);
+      console.log("Data", forecastData);
+    });
+
+    console.log(error);
+  });
+}

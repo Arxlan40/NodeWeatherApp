@@ -8,7 +8,6 @@ const geocode = async (address, callback) => {
 
   try {
     const response = await axios.get(url);
-    // console.log(response.data.features.length);
 
     if (response.data.features.length === 0) {
       callback("Unable to find location. Try another search", undefined);
